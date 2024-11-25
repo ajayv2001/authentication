@@ -1,37 +1,34 @@
-import mongoose from'mongoose'
+import mongoose from 'mongoose'
 
 const userSchema = new mongoose.Schema({
     username:{
         type:String,
-        required:[  true,"please provide a username"],
-        unique: true,
-
+        required:[true,"Please provide username"],
+        unique:true
     },
     email:{
         type:String,
-        required:[ true, "please provide an email"],
-        unique: true,
+        required:[true,"Please provide email"],
+        unique:true
     },
     password:{
         type:String,
-        required: [true, "please provide a password"],
+        required:[true,"Please provide password"],
     },
     isVerified:{
         type:Boolean,
-        default: false
+        default:false
     },
     isAdmin:{
         type:Boolean,
-        default: false
-
+        default:false
     },
     forgotPasswordToken:String,
-    forgotPasswordTokenExpiry:String,
+    forgotPasswordTokenExpiry:Date,
     verifyToken:String,
     verifyTokenExpiry:Date
-
 })
 
-const User = mongoose.user.models || mongoose.model("Users",userSchema)
+const Speed = mongoose.models.Speeds || mongoose.model("Users",userSchema)
 
-export default User
+export default Speed

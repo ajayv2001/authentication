@@ -1,39 +1,36 @@
-import {connect} from '../../dbconfig/dbconfig'
-import User from "@/models/userModels"
-import { NextRequest,NextResponse } from 'next/server'
-import bcryptjs from 'bcryptjs'
+import {connect} from "../../dbconfig/dbconfig"
+import Speed from "@/models/userModels"
+import { NextRequest,NextResponse } from "next/server"
+import bcryptjs from "bcryptjs"
 
 connect()
-export default async function POST(request:NextRequest){
+
+export async function POST(request:NextRequest){
     try {
         const reqBody = await request.json()
-        const {username,email,password} = reqBody
-        // check if username exists
-        const user = await User.findOne({email})
-        if(user){
-            return NextResponse.json({error: 'User already exists'}),{status: 400}
-        }
+        const {username,email, password} = reqBody
 
-        // hash password
+        //check if user already exist
+        const user = await Speed.findOne({email})
+        if(user){
+            return NextResponse.json({error:"User Already exists"},{status:400})
+        }
+        //hash password
         const salt = await bcryptjs.genSalt(10)
         const hashedPassword = await bcryptjs.hash(password, salt)
 
-        const newUser = new User({
+        //create new user
+        const newUser = new Speed({
             username,
             email,
-            password: hashedPassword
+            password:hashedPassword
         })
 
-        const savedUser = await newUser.save()
+        const savedUser = await newUser.save() 
 
-        return NextResponse.json({message:"user created successfully",success:true,savedUser})
+        return NextResponse.json({message:"User created successfully",success:true,savedUser})
 
-        // if no error, return user data to frontend
-        
-    } catch (error: any) {
-        return NextResponse.json({ error: error.message }),{status: 400}
-        
+    } catch (error:any) {
+        return NextResponse.json({error:error.message}),{status:500}
     }
-
-    
 }
